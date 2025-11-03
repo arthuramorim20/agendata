@@ -1,0 +1,30 @@
+name: 'agendata'
+
+services:
+  app:
+    container_name: 'agendata'
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'sh',
+          '-c',
+          'curl -f http://localhost:${CORE_PORT}/v${CORE_VERSION}',
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - PORT=${CORE_PORT}
+      - DEFAULT_VERSION=${CORE_VERSION}
+      - SUPABASE_PROJECT_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - SUPABASE_PUBLISHABLE_OR_ANON_KEY=${SUPABASE_PUBLISHABLE_OR_ANON_KEY} - PORT=${CORE_PORT}
+    volumes:
+      - ../:/app
+    ports:
+      - 3001:3001
